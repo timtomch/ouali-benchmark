@@ -27,3 +27,10 @@ python ouali-benchmark.py config/nomsATC.yaml
 
 Le résultat de l'analyse est affiché sur la ligne de commande lors de l'exécution du script. Ce dernier génère une série de fichiers
 (dans un dossier spécifié en config) comportant les alignements communs et divergents entre Ouali et les sets comparés.
+
+## Définition des sets
+
+Le graphique ci-dessous peut aider à illustrer quels sont les sets de données comparés. Le graphique reprend le nom des variables
+utilisées dans le script pour chaque set, ainsi que le nom de base des fichiers d'export:
+
+![Représentation graphique des sets comparés pour le benchmark Ouali](Ouali-benchmark-sets.svg)
