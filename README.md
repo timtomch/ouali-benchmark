@@ -15,9 +15,9 @@ utilisés pour mesurer s'il y a amélioration ou non.
 
 ## Utilisation
 
-Le script à appeler est `ouali-benchmark.py`. Celui-ci prend pour seul argument un fichier de configuration YAML qui définit
-le nom des fichiers à utiliser pour la comparaison de chaque instance Ouali. Les chemins vers ces fichiers doivent être relatifs
-au script `ouali-benchmark.py`.
+Le script à appeler est `ouali-benchmark.py`. Celui-ci prend pour seul argument un fichier de configuration YAML 
+([voir exemple](config/nomsATC.yaml)) qui définit le nom des fichiers à utiliser pour la comparaison de chaque instance Ouali. 
+Les chemins vers ces fichiers doivent être relatifs au script `ouali-benchmark.py`.
 
 Exemple:
 
