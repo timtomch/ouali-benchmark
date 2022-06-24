@@ -6,9 +6,13 @@
 Instance: nomsATC
 
 # Fichiers d'alignement exportés depuis les instances benchmark d'Ouali (format TSV)
-# Un fichier pour les alignements et non-alignements automatiques, un autre avec les alignements en arbitrage
-Alignements Auto Ouali: input/benchmark-nomsATC.tsv
-Arbitrages Ouali: input/benchmark-undefined-nomsATC.tsv
+# Plusieurs fichiers peuvent être spécifiés, ils seront combinés pour la comparaison.
+# Une série de fichiers pour les alignements et non-alignements automatiques, une autre avec les alignements en arbitrage
+
+Alignements Auto Ouali: 
+    - input/benchmark-nomsATC.tsv
+Arbitrages Ouali: 
+    - input/benchmark-undefined-nomsATC.tsv
 
 # Alignements à comparer (format CSV). Plusieurs fichiers peuvent être spécifiés, ils seront combinés pour la comparaison.
 Alignements RERO:
@@ -21,6 +25,16 @@ Alignements ABES:
 Non-alignements ABES:
     - input/abes-nonalign-only.csv
 
+# Colonnes des fichiers d'alignement à retourner dans les fichiers d'export (lorsque pertinent)
+Colonnes Export Ouali:
+    - forme principale cible
+    
+Colonnes Export RERO:
+    - main_form
+
+Colonnes Export ABES:
+    - NOMCANDIDAT
+    - PRENOMCANDIDAT
 
 # En principe, il n'est pas nécessaire de modifier les lignes ci-dessous.
 # Les mêmes conventions sont ainsi utilisées pour toutes les instances.
