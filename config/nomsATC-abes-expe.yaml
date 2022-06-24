@@ -1,0 +1,51 @@
+# Fichier de configuration pour benchmark Ouali
+# Contient les détails des fichiers à utiliser pour une instance particulière.
+# Les chemins doivent être relatifs à l'emplacement du script ouali-benchmark.py
+
+# Comparaison avec alignements expérimentaux ABES
+# -----------------------------------------------
+# Il s'agit ici de comparer les alignements automatiques de l'ABES obtenus avec 
+
+# Nom de l'instance, utilisé pour nommer les fichiers d'export
+Instance: nomsATC-expeABES
+
+# Fichiers d'alignement exportés depuis les instances benchmark d'Ouali (format TSV)
+# Un fichier pour les alignements et non-alignements automatiques, un autre avec les alignements en arbitrage
+Alignements Auto Ouali: input/benchmark-nomsATC.tsv
+Arbitrages Ouali: input/benchmark-undefined-nomsATC.tsv
+
+# Alignements à comparer (format CSV). Plusieurs fichiers peuvent être spécifiés, ils seront combinés pour la comparaison.
+Alignements RERO:
+
+Alignements ABES:
+    - input/abes-alignements-experimentaux-20220602.csv
+    
+Non-alignements ABES:
+
+# Colonnes des fichiers d'alignement à retourner dans les fichiers d'export (lorsque pertinent)
+Colonnes Export Ouali:
+    - forme principale cible
+    
+Colonnes Export RERO:
+    - main_form
+
+Colonnes Export ABES:
+    - Appellation_IdRef
+    
+
+
+
+# En principe, il n'est pas nécessaire de modifier les lignes ci-dessous.
+# Les mêmes conventions sont ainsi utilisées pour toutes les instances.
+
+# Fichier de concordance RERO (alignement des identifiants RERO vers identifiants RNV)
+Concordance RERO: input/20220228_concordances_id_rnv_id_rero_4_headings.csv
+
+Dossier Export: output
+
+# Racines des noms des fichiers d'export
+Alignements Communs: communs
+Non-Alignements Communs: communs-nonalignements
+Alignements Divergents: divergences
+Non-Alignements Divergents: divergences-nonalignements
+Manquants: manquants
