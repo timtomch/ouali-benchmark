@@ -40,7 +40,7 @@ common_noalign_file = config['Non-Alignements Communs']
 divergences_file = config['Alignements Divergents']
 div_noalign_file = config['Non-Alignements Divergents']
 missed_file = config['Manquants']
-
+leftovers_file = config['Restes']
 
 # ### Préparation des données Ouali
 # 
@@ -59,13 +59,14 @@ ouali_data['cible'] = ouali_data['id cible']
 # .copy() est nécessaire pour éviter les erreurs SettingWithCopyWarning
 ouali_align = ouali_data.query('`nombre de candidats` != "0" & `décision d\'alignement` == "auto"').copy()
 ouali_no_align = ouali_data.query('`nombre de candidats` == "0" & `décision d\'alignement` == "auto"').copy()
+ouali_manual = ouali_data.query('`décision d\'alignement` != "auto"').copy()
 
 print('Résultats du benchmark des alignements Ouali pour l\'instance ' + set_name)
 print('----------------------------------------------------------------------------')
 print('Alignements Ouali: ' + str(len(ouali_align)))
 print('Non-alignements Ouali: ' + str(len(ouali_no_align)))
 print('Alignements à arbitrer (pas de décision): ' + str(len(ouali_undefined_data)))
-
+print('Alignements manuels ou externes (ignorés lors du benchmark): ' +str(len(ouali_manual)))
 
 # Avons-nous au moins un fichier RERO? Si non, on passe à la suite
 if rero_files is not None:
@@ -156,19 +157,7 @@ if abes_files is not None:
     # ### Préparation des données ABES
 
     abes_align = pd.concat((pd.read_csv(f, dtype = str) for f in abes_files))
-    print("Nombre de concordances validées dans le fichier ABES: ",len(abes_align))
-    
-    if abes_noalign_file is not None:
-        abes_noalign = pd.concat((pd.read_csv(f, dtype = str) for f in abes_noalign_file))
-        print("Nombre de non-alignements validés dans le fichier ABES: ",len(abes_noalign))
-        noalign_comp = True
-    else:
-        print("ALERTE: Aucun fichier de non-alignement fourni pour l'ABES - seules les concordances seront comparées.")
-        noalign_comp = False
 
-
-    # ### Comparaison des données Ouali avec l'ABES
-    # 
     # Suivant le type de données fournies par l'ABES, il est nécessaire de préparer les données
     #
     
@@ -186,7 +175,20 @@ if abes_files is not None:
         print("ERREUR format de fichier ABES non-reconnu!")
         sys.exit()
 
+    print("Nombre de concordances validées dans le fichier ABES: ",len(abes_align))
+    
+    if abes_noalign_file is not None:
+        abes_noalign = pd.concat((pd.read_csv(f, dtype = str) for f in abes_noalign_file))
+        print("Nombre de non-alignements validés dans le fichier ABES: ",len(abes_noalign))
+        noalign_comp = True
+    else:
+        print("ALERTE: Aucun fichier de non-alignement fourni pour l'ABES - seules les concordances seront comparées.")
+        noalign_comp = False
+
     if noalign_comp : abes_noalign['source']=abes_noalign['ID_EC'].str.extract(r'(\d{18})')
+
+    # ### Comparaison des données Ouali avec l'ABES
+    #
 
     common_source_abes = pd.merge(abes_align, ouali_align, how="inner", on='source', suffixes=("_abes", "_ouali"), copy=True)
     print("Alignements Ouali présents dans fichier ABES: ", len(common_source_abes))
@@ -200,7 +202,7 @@ if abes_files is not None:
     try:
         common_target_abes.to_csv(outfile,columns=['source','cible'] + ouali_fields + abes_fields,encoding="UTF-8",index=False)
     except:
-        print("ERREUR colonnes " + ouali_fields.join(',') + '; ' + abes_fields.join(',') + " non reconnues")
+        print("ERREUR colonnes " + ','.join(ouali_fields) + '; ' + ','.join(abes_fields) + " non reconnues")
         sys.exit()
         
     print("Alignements Ouali validés par l'ABES: ", len(common_target_abes))
@@ -211,10 +213,17 @@ if abes_files is not None:
 
         outfile = output_folder + '/' + common_noalign_file + '-ABES-' + set_name + '.csv'
         common_source_noalign_abes.to_csv(outfile,columns=['source'],encoding="UTF-8",index=False)
-        print("Non-alignements Ouali: ", len(ouali_no_align))
-        print("Non-alignements Ouali communs avec l'ABES: ", len(common_source_noalign_abes))
+        print("Non-alignements Ouali: ", str(len(ouali_no_align)))
+        print("Non-alignements Ouali communs avec l'ABES: ", str(len(common_source_noalign_abes)))
         print("Pourcentage validé: ", round(len(common_source_noalign_abes)/len(ouali_no_align)*100,1), "%")
         print("Exportés dans ", outfile)
+
+
+    # Pour vérifier le total à la fin, on compte les alignements manuels d'Ouali qui étaient présents dans le fichier ABES
+    
+    ignored_abes = pd.merge(abes_align, ouali_manual, how="inner", on='source', suffixes=("_abes", "_ouali"), copy=True)
+    print("Alignements manuels Ouali présents dans le fichier de l'ABES (ignorés): " + str(len(ignored_abes)))
+
 
 
     # #### Différences entre Ouali et l'ABES
@@ -226,7 +235,7 @@ if abes_files is not None:
     try:
         divergences_abes.to_csv(outfile,columns=['source','cible_ouali','cible_abes'] + ouali_fields + abes_fields,encoding="UTF-8",index=False)
     except:
-        print("ERREUR colonnes " + ouali_fields.join(',') + '; ' + abes_fields.join(',') + " non reconnues")
+        print("ERREUR colonnes " +','.join(ouali_fields) + '; ' + ','.join(abes_fields) + " non reconnues")
         sys.exit()
         
     if noalign_comp :
@@ -239,7 +248,7 @@ if abes_files is not None:
         try:
             divergences_NOT_abes.to_csv(outfile,columns=['source','cible_ouali','cible_abes'] + ouali_fields + abes_fields ,encoding="UTF-8",index=False, mode='a')
         except:
-            print("ERREUR colonnes " + ouali_fields.join(',') + '; ' + abes_fields.join(',') + " non reconnues")
+            print("ERREUR colonnes " + ','.join(ouali_fields) + '; ' + ','.join(abes_fields) + " non reconnues")
             sys.exit()
 
     print("Alignements Ouali qui diffèrent dans l'ABES: ", len(divergences_abes))
@@ -256,7 +265,7 @@ if abes_files is not None:
     try:
         div_nonalign_abes.to_csv(outfile,columns=['source','cible_ouali','cible_abes'] + ouali_fields + abes_fields ,encoding="UTF-8",index=False)
     except:
-        print("ERREUR colonnes " + ouali_fields.join(',') + '; ' + abes_fields.join(',') + " non reconnues")
+        print("ERREUR colonnes " + ','.join(ouali_fields) + '; ' + ','.join(abes_fields) + " non reconnues")
         sys.exit()
         
     print("Non-alignements Ouali erronés: ", len(div_nonalign_abes))
@@ -270,9 +279,9 @@ if abes_files is not None:
     missed_abes = pd.merge(abes_align, ouali_undefined_data, how="inner", on='source', suffixes=("_abes", "_ouali"), copy=True)
     
     try:
-        missed_abes.to_csv(outfile,columns=['source','cible'] + abes_fields,encoding="UTF-8",index=False)
+        missed_abes.to_csv(outfile,columns=['source','cible', 'forme principale source'] + abes_fields,encoding="UTF-8",index=False)
     except:
-        print("ERREUR colonnes " + abes_fields.join(',') + " non reconnues")
+        print("ERREUR colonnes " + ','.join(abes_fields) + " non reconnues")
         sys.exit()
 
     if noalign_comp :
@@ -281,11 +290,26 @@ if abes_files is not None:
         missed_noalign_abes.insert(0,'cible', "NaN")
         
         try:
-            missed_noalign_abes.to_csv(outfile,columns=['source','cible'] + abes_fields,encoding="UTF-8",index=False,mode='a')
+            missed_noalign_abes.to_csv(outfile,columns=['source','cible', 'forme principale source'] + abes_fields,encoding="UTF-8",index=False,mode='a')
         except:
-            print("ERREUR colonnes " + abes_fields.join(',') + " non reconnues")
+            print("ERREUR colonnes " + ','.join(abes_fields) + " non reconnues")
             sys.exit()
         
     print("Alignements manqués: ", len(missed_abes))
     if noalign_comp : print("Non-alignements manqués: ", len(missed_noalign_abes))
     print("Exportés dans ", outfile)
+    
+    # Reste-t-il des alignements dans le fichier ABES qui n'ont pas été comparés?
+    
+    abes_leftovers = abes_align[(abes_align.source.isin(common_source_abes.source) == False) & 
+                                (abes_align.source.isin(div_nonalign_abes.source) == False) &
+                                (abes_align.source.isin(missed_abes.source) == False) &
+                                (abes_align.source.isin(ouali_manual.source) == False)]
+    
+    leftovers = len(abes_leftovers)
+    
+    if leftovers > 0:
+        print("ALERTE: Il reste " + str(leftovers) + " alignements dans le fichier ABES qui n'ont pas été traités.")
+        outfile = output_folder + '/' + leftovers_file + '-ABES-' + set_name + '.csv'
+        abes_leftovers.to_csv(outfile,encoding="UTF-8",index=False)
+        print("Exportés dans ", outfile)

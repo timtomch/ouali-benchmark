@@ -7,7 +7,7 @@
 # Il s'agit ici de comparer les alignements automatiques de l'ABES obtenus avec 
 
 # Nom de l'instance, utilisé pour nommer les fichiers d'export
-Instance: nomsATC-expeABES
+Instance: nomsATC-expeABES-v2
 
 # Fichiers d'alignement exportés depuis les instances benchmark d'Ouali (format TSV)
 # Plusieurs fichiers peuvent être spécifiés, ils seront combinés pour la comparaison.
@@ -26,7 +26,7 @@ Arbitrages Ouali:
 Alignements RERO:
 
 Alignements ABES:
-    - input/abes-alignements-experimentaux-20220602.csv
+    - input/abes-alignements-experimentaux-2efichier-methode_a-20220725.csv
     
 Non-alignements ABES:
 
@@ -55,3 +55,4 @@ Non-Alignements Communs: communs-nonalignements
 Alignements Divergents: divergences
 Non-Alignements Divergents: divergences-nonalignements
 Manquants: manquants
+Restes: restes
