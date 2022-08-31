@@ -13,6 +13,7 @@ import pandas as pd
 import gc
 import yaml
 import sys
+import re
 
 config_file = str(sys.argv[1])
 
@@ -48,7 +49,19 @@ leftovers_file = config['Restes']
 # 
 # Pour tous les chargements de données, on s'assure que Python traite toutes les valeurs comme texte, sinon il va convertir certaines colonnes contenant des identifiants en nombres, ce qui peut poser problème par la suite si on les compare aux mêmes données chargées comme texte ou si on essaie de faire une opération join sur ces colonnes. Pour cela, on spécifie le paramètre `dtype`.
 
-ouali_data = pd.concat((pd.read_csv(f, sep='\t', encoding = "UTF-8", dtype = str) for f in ouali_files))
+# Pour simplifier le travail d'analyse, on ajoute le nom de l'instance à la table Ouali. Pour que cela fonctionne, il faut que les noms de fichiers
+# d'input commencent par le nom de l'instance selon le format défini ici https://labs.timtom.ch/oualidoc/chantiers#instances-ouali
+# Le script essaie de voir si cela correspond, sinon le nom de l'instance n'est pas ajouté.
+
+appended_data = []
+for f in ouali_files:
+    data = pd.read_csv(f, sep='\t', encoding = "UTF-8", dtype = str)
+    instance_name = re.search(r'(\w+-\w+)',f)
+    data['instance'] = instance_name.group()
+    appended_data.append(data)
+ouali_data = pd.concat(appended_data)
+
+#ouali_data = pd.concat((pd.read_csv(f, sep='\t', encoding = "UTF-8", dtype = str) for f in ouali_files))
 ouali_undefined_data = pd.concat((pd.read_csv(f, sep='\t', encoding = "UTF-8", dtype = str) for f in ouali_undefined_files))
 
 # On renomme les colonnes des identifiants source et cible comme dans les fichiers RERO, cela simplifiera les opérations de comparaison
