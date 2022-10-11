@@ -55,13 +55,11 @@ Les esprits tâtillons comme l'auteur des scripts décrits ici prendront alors s
 Les deux scripts nécessitent un fichier de concordance pour faire correspondre les identifiants RERO vers le PPN Alma de Renouvaud.
 Ces fichiers (générés par Michaël Hertig) sont au format CSV et doivent inclure au minimum les colonnes suivantes:
 
-|------------------|-------------------------------------------------------------------------------------------------|
 | Nom de colonne   | Détails                                                                                         |
 |------------------|-------------------------------------------------------------------------------------------------|
 | `id`             | PPN Renouvaud, p.ex. `981023303677402851`                                                       |
 | `id_rero`        | Identifiant RERO correspondant, de la forme `(RERO)vtls000022969`                               |
 | `id_rero_a`      | Optionel, deuxième identifiant RERO correspondant. Seul le premier des deux est pris en compte. |
-|------------------|-------------------------------------------------------------------------------------------------|
 
 ## Exports pour RERO+
 
