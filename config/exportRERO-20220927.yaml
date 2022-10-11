@@ -1,0 +1,26 @@
+# Fichier de configuration pour export alignements Ouali manuels vers RERO
+# Les chemins doivent être relatifs à l'emplacement du script RERO-export.py
+
+# Fichiers d'alignement exportés depuis les instances d'Ouali (format TSV)
+# Plusieurs fichiers peuvent être spécifiés, ils seront combinés lors de l'export.
+
+Alignements Ouali: 
+    - input/RI-G-established-20220927.tsv
+    - input/RI-T-established-20220927.tsv
+    - input/AI-P1-established-20220927.tsv
+    - input/AI-P2-established-20220927.tsv
+    - input/AI-P3-established-20220927.tsv
+    - input/AI-C1-established-20220927.tsv
+    - input/AI-C2-established-20220927.tsv
+
+# Fichier de concordance RERO (alignement des identifiants RERO vers identifiants RNV)
+Concordance RERO: input/20220729_concordances_id_rnv_id_rero_4_headings_withoutPrefix1.csv
+
+# Paramètres d'export
+Dossier Export: export-rero-20220927
+
+# Si le paramètre suivant est défini, tous les alignements seront combinés dans un seul fichier export portant ce nom.
+# S'il est laissé vide, un fichier d'export distinct sera généré pour chaque fichier d'alignement spécifié plus haut
+# suivi du suffixe "_export-RERO".
+# Le chemin du fichier export est relatif au dossier export spécifié ci-dessus.
+Fichier Export: 

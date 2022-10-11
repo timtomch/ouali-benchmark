@@ -2,17 +2,19 @@
 # Contient les détails des fichiers à utiliser pour une instance particulière.
 # Les chemins doivent être relatifs à l'emplacement du script ouali-benchmark.py
 
+# VERSION APRES AMELIORATION DE L'ALGORITHME - FIN AOUT 2022
+
 # Nom de l'instance, utilisé pour nommer les fichiers d'export
-Instance: nomsATC
+Instance: nomsATC-v2
 
 # Fichiers d'alignement exportés depuis les instances benchmark d'Ouali (format TSV)
 # Plusieurs fichiers peuvent être spécifiés, ils seront combinés pour la comparaison.
 # Une série de fichiers pour les alignements et non-alignements automatiques, une autre avec les alignements en arbitrage
 
 Alignements Auto Ouali: 
-    - input/benchmark-nomsATC.tsv
+    - input/benchmark-nomsATC-20220905.tsv
 Arbitrages Ouali: 
-    - input/benchmark-undefined-nomsATC.tsv
+    - input/benchmark-undefined-nomsATC-20220905.tsv
 
 # Alignements à comparer (format CSV). Plusieurs fichiers peuvent être spécifiés, ils seront combinés pour la comparaison.
 Alignements RERO:
