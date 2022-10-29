@@ -1,0 +1,25 @@
+# Fichier de configuration pour le calcul des statistiques d'alignement Ouali.
+# Les chemins doivent être relatifs à l'emplacement du script ouali-stats.py
+
+# Fichiers d'alignement exportés depuis les instances d'Ouali (format TSV)
+# Pour que l'analyse fonctionne, il est ici important de nommer ces fichiers selon un schéma précis:
+# Il faut que leur nom commence par le nom des instances sous la forme XX-XX ou XX-X
+
+# Liste des rapports "EstablishedMatches" (pour compter le nombre d'alignements effectués):
+Alignements effectués: 
+    - input/AI-C1-established-20220927.tsv
+    - input/AI-C2-established-20220927.tsv
+    - input/AI-P1-established-20220927.tsv
+    - input/AI-P2-established-20220927.tsv
+    - input/AI-P3-established-20220927.tsv
+    - input/RA-C-established-20220927.tsv
+    - input/RA-P1-established-20220927.tsv
+    - input/RA-P2-established-20220927.tsv
+    - input/RI-G-established-20220927.tsv
+    - input/RI-T-established-20220927.tsv
+
+# Liste des rapports "UndefinedMatches" (pour compter le nombre d'alignements restant à traiter):
+Alignements à traiter:
+    - input/AI-P1-undefined-20220830.tsv
+    - input/AI-P2-undefined-20220830.tsv
+    - input/AI-P3-undefined-20220830.tsv
